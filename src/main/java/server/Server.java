@@ -1,23 +1,27 @@
 package server;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// TODO: 02.03.2021
-// notify about connect / disconnect
 
 public class Server {
+	private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 	public Server() {
 		ExecutorService service = Executors.newFixedThreadPool(4);
 		try (ServerSocket server = new ServerSocket(1235)){
-			System.out.println("Server started");
+			LOGGER.info("Server started");
 			while (true) {
 				service.execute(new ClientHandler(server.accept()));
+				LOGGER.info("Client connected");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			LOGGER.info("Something went wrong");
 		}
 	}
 
